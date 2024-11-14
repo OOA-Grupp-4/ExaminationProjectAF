@@ -1,4 +1,5 @@
-﻿using ExaminationProjectAF.Business.Interfaces;
+﻿using ExaminationProjectAF.Business.Enums;
+using ExaminationProjectAF.Business.Interfaces;
 using ExaminationProjectAF.Business.Models;
 using ExaminationProjectAF.Business.Services;
 using Moq;
@@ -60,5 +61,52 @@ public class ProductService_Tests
         Assert.Equal(2, result.Data.Count());
         Assert.Contains(result.Data, x => x.Name == "IPhone");
         Assert.Contains(result.Data, x => x.Name == "Laptop");
+    }
+
+
+    [Fact]
+    public void AddProduct_ShouldReturnSuccess_WhenProductIsAdded()
+    {
+        // Arrange
+        var product = new Product { Id = "1", Name = "Speaker", Price = 699.99m, Category = "Sound", StockStatus = StockStatus.InStock };
+        _productrepositoryMock.Setup(x => x.AddProduct(product));
+
+        // Act
+        var result = _productService.AddProduct(product);
+
+        // Assert
+        Assert.True(result.Success);
+        Assert.Equal(product, result.Data);
+    }
+
+
+    [Fact]
+    public void UpdateProduct_ShouldReturnSuccess_WhenProductIsUpdated()
+    {
+        // Arrange
+        var product = new Product { Id="1", Name = "Headphones", Price = 799.99m, Category = "Sound", StockStatus= StockStatus.InStock };
+        _productrepositoryMock.Setup(x => x.GetProductById("1")).Returns(product);
+
+        // Act
+        product.Price = 599.99m;
+        var result = _productService.UpdateProduct(product);
+
+        // Assert
+        Assert.True(result.Success);
+        Assert.Equal(599.99m, result.Data!.Price);
+    }
+
+
+    [Fact]
+    public void DeleteProduct_ShouldReturnSuccess_WhenProductIsDeleted()
+    {
+        // Arrange
+        _productrepositoryMock.Setup(x => x.DeleteProduct("1")).Returns(true);
+
+        // Act
+        var result = _productService.DeleteProduct("1");
+
+        // Assert
+        Assert.True(result.Success);
     }
 }

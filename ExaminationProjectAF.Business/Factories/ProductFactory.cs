@@ -13,6 +13,7 @@ public static class ProductFactory
                 Name = productRequest.Name,
                 Price = productRequest.Price,
                 Category = productRequest.Category,
+                StockStatus = productRequest.StockStatus,
             };
 
             return product;

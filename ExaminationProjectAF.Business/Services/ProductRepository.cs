@@ -18,9 +18,39 @@ public class ProductRepository : IProductRepository
             return _products.FirstOrDefault(x => x.Id == id)!;
         }
     }
-
     public IEnumerable<Product> GetProducts()
     {
         return _products;
     }
+
+    public void AddProduct(Product product)
+    {
+        _products.Add(product);
+    }
+
+    public void UpdateProduct(Product product)
+    {
+        var index = _products.FindIndex(x => x.Id == product.Id);
+        if (index != -1)
+        {
+            _products[index] = product;
+        }
+    }
+
+    public bool DeleteProduct(string productId)
+    {
+        var product = _products.FirstOrDefault(x => x.Id == productId);
+        if (product == null)
+        {
+            return false;
+        }
+        else
+        {
+            _products.Remove(product);
+            return true;
+        }
+    }
+
+
+
 }
